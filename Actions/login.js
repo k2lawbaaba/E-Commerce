@@ -1,15 +1,9 @@
 const Validation = require("../Validations/Joi_validation")
 const bcrypt = require('bcrypt');
+const handleErrors = require('./handleErrors')
 
-const verifyEntries= async (email, phone, con)=>{
-    try {
-        const isExist =await dbName.findOne({$or: [{email}, {phone}]});
-       return isExist !==null;
-    } catch (error) {
-        console.error(error);
-        return false;
-    }
-}
+
+
 login = async (req, res)=>{
     const collection ="userDetails"
     let name, password;
