@@ -1,4 +1,5 @@
 const mongoose =require("mongoose");
+const bcrypt = require('bcrypt');
 
 const userSchema= new mongoose.Schema({
     name:{
@@ -33,13 +34,31 @@ const userSchema= new mongoose.Schema({
         required: [true, 'Field can not be empty']
     },
 })
+userSchema.static("userDetails", async(email, password)=>{
+    let result = await this.findOne({email})
+    if(result){
+        const match = await bcrypt.compare(value.password, password);
+        if(match){
+            return result;
+        }
+        else{
+            return(`Incorrect password`)
+        }
+    }
+    else{
+        return('invalid email')
+    }
+
+})
+
+
 
 const productSchema = new mongoose.Schema({
     Name:{
         type: String,
         require:[true, "Name is require"]
     },
-    Quantity: {
+    QuantityInStock: {
         type: Number,
         required:[true, 'Quantity is required'],
         default:0,
@@ -66,7 +85,11 @@ const productSchema = new mongoose.Schema({
         ],
         message:'{VALUE} is not category value.'
     } 
+  },
+  CreatedAt:{
+    type : Date,
   }
+
 });
 
 

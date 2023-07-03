@@ -5,7 +5,7 @@ const handleErrors = require('./handleErrors')
 
 
 const signUp = async (req, res)=>{
-    const {error, value} =Validation.userSchema(req.body)
+    const {error, value} =Validation.userJoiSchema(req.body);
     if(error){
         res.status(400).json(error)
     }

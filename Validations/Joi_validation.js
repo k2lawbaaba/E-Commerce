@@ -1,7 +1,6 @@
 const Joi = require('joi');
-const { Schema } = require('mongoose');
 
-module.exports.userSchema=(str)=>{
+module.exports.userJoiSchema=(str)=>{
 
     Schemas=Joi.object({
     name:Joi.string()
@@ -65,7 +64,7 @@ module.exports.productSchema=(str)=>{
         'string.empty': `"name" cannot be empty`,
         'any.required': `This field is required`
     }),
-    Quantity:Joi.number()
+    QuantityInStock:Joi.number()
     .required()
     .messages({
         'number.base': `"Quantity" should be a "number"`,
@@ -82,7 +81,9 @@ module.exports.productSchema=(str)=>{
         'number.positive': `{{#label}} must be positive`
     }),
     Description:Joi.string()
-    .allow('')
+    .allow(''),
+    Category:Joi.string()
+    .required()
 })
 
 return Schemas.validate(str)
