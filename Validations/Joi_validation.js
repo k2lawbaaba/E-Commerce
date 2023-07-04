@@ -112,3 +112,16 @@ module.exports.loginSchema=(data)=>{
     })
     return Schemas.validate(data);
 }
+
+module.exports.productById=(data)=>{
+     schema=Joi.object({
+        productId: Joi.string()
+        .required()
+        .trim()
+        .message({
+            'string.base': `it must be string character`,
+            'any.required': `This field is required`
+        })
+    })
+    return schema.validate(data)
+}
