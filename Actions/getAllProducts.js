@@ -1,11 +1,7 @@
-const mongoose = require('mongoose');
-
+const {product} = require('../Models/schemas')
 const getProducts = async (req, res) => {
   try {
-    const products = mongoose.connection.collection("products");
-    const results = await products.find({}).toArray(); // Use .toArray() to convert the cursor to an array
-
-    console.log(results);
+    const results = await product.find({},'-__v')  ; // Use .toArray() to convert the cursor to an array
     res.status(201).json(results);
   } catch (error) {
     res.status(403).send(error);

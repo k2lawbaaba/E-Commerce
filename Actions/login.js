@@ -1,7 +1,8 @@
 const Validation = require("../Validations/Joi_validation");
-const mongoose =require('mongoose');
 const bcrypt = require('bcrypt');
-const handleErrors = require('./handleErrors');
+const {user} =require('../Models/schemas')
+const jwt= require("jsonwebtoken");
+// const handleErrors = require('./handleErrors');
 
 
 
@@ -13,10 +14,10 @@ const login = async (req, res)=>{
     }
     else{
         try {
-            const user = mongoose.connection.collection("users");
             const result =await user.findOne({email:value.email});
-                      console.log(user);
             if(result){
+          
+        //   const token= 
           const match= await  bcrypt.compare(value.password, result.password)
              
                  if(match){
@@ -35,7 +36,7 @@ const login = async (req, res)=>{
         catch (error) {
             // const err= handleErrors(error)
             res.status(403).send(error)
-            console.log(error);
+        
 
     }
 }

@@ -1,4 +1,6 @@
 const mongoose =require("mongoose");
+const {isEmail} =require('validator')
+const bcrypt = require('bcrypt');
 
 const userSchema= new mongoose.Schema({
     name:{
@@ -11,12 +13,13 @@ const userSchema= new mongoose.Schema({
             validator:(v)=> /^((\+234)+|0)[7-9]{1}[0-9]{9}$/.test(v),
             message: "Invalid phone number"
         },
-        unique:[true,"Phone number already exist"]
+        unique:true
     },
     email: {
         type: String,
-        unique: [true, "Email already exist"],
-        require:[true, "This field is required"]
+        unique: true,
+        require:[true, "This field is required"],
+        validate:[isEmail,"Please enter a valid email"]
         
     },
     password: {
@@ -73,7 +76,14 @@ const productSchema = new mongoose.Schema({
 
 });
 
+//mongoose hooks for middleware
+userSchema.pre('save', async function(){
+   this.password= await bcrypt.hash(this.password, 10)
 
+})
+userSchema.post('save', async function(doc,res){
+    await console.log(`New User created with id ${doc._id}`);
+})
 
 module.exports.user= new mongoose.model("user", userSchema)
 

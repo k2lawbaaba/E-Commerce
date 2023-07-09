@@ -1,5 +1,5 @@
 const Validation = require("../Validations/Joi_validation");
-const mongoose =require('mongoose');
+const {product}=require('../Models/schemas')
 
 const getProductById= async(req, res)=>{
    
@@ -8,9 +8,7 @@ const getProductById= async(req, res)=>{
 else{
 const id=value.productId;
     try {
-        const products = mongoose.connection.collection('products');
-        const result= await products.findById(id).exec();
-        console.log((id));
+        const result= await product.findById(id, "name QuantityInStock PricePerUnit Category Description");
         res.status(201).send(result)
     } catch (error) {
         res.status(403).send(error)

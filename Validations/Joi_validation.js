@@ -7,8 +7,8 @@ module.exports.userJoiSchema=(str)=>{
     .required()
     .trim()
     .messages({
-        'string.base': `"name" should be a "text"`,
-        'string.empty': `"name" cannot be empty`,
+        'string.base': `Name should be a "text"`,
+        'string.empty': `this cannot be empty`,
         'any.required': `This field is required`
     }),
     phone:Joi.string()

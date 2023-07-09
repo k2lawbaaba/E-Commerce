@@ -21,6 +21,7 @@ const createProducts= async (req, res)=>{
         const product = await products.save();
         res.status(201).send(product)
     } catch (error) {
+        console.log(error.errors);
         res.status(403).send(error)
     }
 }
