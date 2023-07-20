@@ -3,7 +3,7 @@ const Joi = require('joi');
 module.exports.userJoiSchema=(str)=>{
 
     Schemas=Joi.object({
-    name:Joi.string()
+    Name:Joi.string()
     .required()
     .trim()
     .messages({
@@ -11,7 +11,7 @@ module.exports.userJoiSchema=(str)=>{
         'string.empty': `this cannot be empty`,
         'any.required': `This field is required`
     }),
-    phone:Joi.string()
+    Phone:Joi.string()
     .trim()
     .required()
     .pattern(new RegExp(/^((\+234)+|0)[7-9]{1}[0-9]{9}$/))
@@ -20,7 +20,7 @@ module.exports.userJoiSchema=(str)=>{
         'any.required':'phone Number must not be empty',
     }),
 
-    email:Joi.string()
+    Email:Joi.string()
     .trim()
     .email()
     .required()
@@ -29,7 +29,7 @@ module.exports.userJoiSchema=(str)=>{
         'any.required': `this field is require`,
         'string.empty': `"email" cannot be empty field`,
     }),
-    password : Joi.string()
+    Password : Joi.string()
     .required()
     .min(8)
     .pattern(new RegExp(/(?=.*[A-Z])[a-zA-Z0-9]+[\#\@\$\%\&\*\(\)\>\<\~\{\}]+/))
@@ -39,15 +39,9 @@ module.exports.userJoiSchema=(str)=>{
         'string.min': `"password" length must at least be 8 characters long`
     }),
     // repeat_password: Joi.ref('password'),
-    
-
-    access_token:[
-        Joi.string(),
-        Joi.number()
-    ]
 
 })
-.xor('password', 'access_token')
+// .xor('password', 'access_token')
 // .with('password', 'repeat_password');
 
     return Schemas.validate(str)
@@ -92,7 +86,7 @@ return Schemas.validate(str)
 
 module.exports.loginSchema=(data)=>{
     Schemas = Joi.object({
-        email : Joi.string()
+        Email : Joi.string()
         .email()
         .required()
         .trim()
@@ -101,7 +95,7 @@ module.exports.loginSchema=(data)=>{
             'any.required': `this field is require`,
             'string.empty': `"email" cannot be empty field`,
         }),
-        password : Joi.string()
+        Password : Joi.string()
         .trim()
         .required()
         .messages({
@@ -124,4 +118,73 @@ module.exports.productById=(data)=>{
         })
     })
     return schema.validate(data)
+}
+
+module.exports.changePassword=(data)=>{
+    schema= Joi.object({
+        Old_Password : Joi.string()
+    .required()
+    .min(8)
+    .pattern(new RegExp(/(?=.*[A-Z])[a-zA-Z0-9]+[\#\@\$\%\&\*\(\)\>\<\~\{\}]+/))
+    .messages({
+        'string.pattern.base': `'Password' must contain atleast one capital letter and one special characters`,
+        'any.required': `Old Password is required`,
+        'string.min': `Password length must at least be 8 characters long`
+    }),
+    New_Password : 
+    Joi.string()
+    .required()
+    .min(8)
+    .pattern(new RegExp(/(?=.*[A-Z])[a-zA-Z0-9]+[\#\@\$\%\&\*\(\)\>\<\~\{\}]+/))
+    .messages({
+        'string.pattern.base': `'Password' must contain atleast one capital letter and one special characters`,
+        'any.required': `Password is required`,
+        'string.min': `Password length must at least be 8 characters long`
+    }),
+    Confirm_Password: Joi.string()
+    .required()
+    .valid(Joi.ref('New_Password'))
+})
+.with('New_Password', 'Confirm_Password');
+return schema.validate(data);
+}
+
+
+module.exports.updateProductSchema=(str)=>{
+
+    Schemas=Joi.object({
+    productId: Joi.string()
+        .required()
+        .trim()
+        .message({
+            'string.base': `it must be string character`,
+            'any.required': `This field is required`
+        }),
+    Name:Joi.string()
+    .trim()
+    .messages({
+        'string.base': `"name" should be a "text"`,
+        'string.empty': `"name" cannot be empty`,
+        'any.required': `This field is required`
+    }),
+    QuantityInStock:Joi.number()
+    .messages({
+        'number.base': `"Quantity" should be a "number"`,
+        'number.empty': `"Quantity" cannot be empty`,
+        'any.required': `This field is required`
+    }),
+    PricePerUnit:Joi.number()
+    .positive()
+    .messages({
+        'number.base': `"Price Per Unit" should be a "number"`,
+        'number.empty': `"Price" cannot be empty`,
+        'any.required': `This field is required`,
+        'number.positive': `{{#label}} must be positive`
+    }),
+    Description:Joi.string()
+    .allow(''),
+    Category:Joi.string()
+})
+
+return Schemas.validate(str)
 }

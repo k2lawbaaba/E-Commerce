@@ -1,18 +1,25 @@
 const Validation = require("../Validations/Joi_validation");
-const {product}=require('../Models/schemas')
+const {product}=require('../Models/schemas');
+let errorHandler= require('./handleErrors');
+let {StatusCodes}= require('http-status-codes');
 
 const getProductById= async(req, res)=>{
    
-    const {err, value} = Validation.productById(req.body)
-    if(err) res.status(403).send(err);
+    const {err, value} = Validation.productById(req.params)
+    if(err) 
+    {
+        const error= errorHandler.handleJoiErrors(err);
+        res.status(StatusCodes.NOT_ACCEPTABLE).json({"Validation error": error});
+    }
 else{
-const id=value.productId;
+
     try {
-        const result= await product.findById(id, "name QuantityInStock PricePerUnit Category Description");
+        const result= await product.findById(value.id, "name QuantityInStock PricePerUnit Category Description");
         res.status(201).send(result)
     } catch (error) {
-        res.status(403).send(error)
-        console.log(error);
+        let errors= errorHandler.handleMongooseErrors(error);
+        res.status(StatusCodes.FORBIDDEN).json({"Error Message" : errors});
+        
     }
 }
 }

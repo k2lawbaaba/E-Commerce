@@ -10,7 +10,6 @@ const app = express();
 // middlewares
 app.use(cookieParser())
 app.use(express.json());
-
 app.use(routes);
 
 const url=process.env.COMPASS || process.env.DATABASE;

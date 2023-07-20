@@ -1,28 +1,33 @@
 const schemas =require('../Models/schemas');
 const Validation = require("../Validations/Joi_validation");
-const handleErrors = require('./handleErrors')
+const handleErrors = require('./handleErrors');
+let {StatusCodes} = require('http-status-codes');
 
 
 const createProducts= async (req, res)=>{
     const {error, value} = Validation.productSchema(req.body)
     if(error){
-        res.status(401).send(error)
+        const errors = handleErrors.handleJoiErrors(error);
+        res.status(StatusCodes.NOT_ACCEPTABLE).json({"Validation Errors": errors});
     }
+else{
 
     try {
         const products = new schemas.product({
             "Name": value.Name,
             "QuantityInStock": value.QuantityInStock,
-            "PricePerUnit" :value.price,
-            "Description": value.description,
+            "PricePerUnit" :value.PricePerUnit,
+            "Description": value.Description,
             "Category": value.Category,
-            "CreatedAt": new Date()
+            "CreatedAt": new Date(),
+            "UpdatedAt":null
         })
         const product = await products.save();
         res.status(201).send(product)
     } catch (error) {
-        console.log(error.errors);
-        res.status(403).send(error)
+        const {message, enumValues}= error.errors.Category.properties;
+        res.status(StatusCodes.FORBIDDEN).json({"Error Message": message, "Categories": enumValues});
     }
+}
 }
 module.exports=createProducts;

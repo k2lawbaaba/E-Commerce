@@ -21,14 +21,14 @@
                       errors[properties.path] = properties.message;
                     });
                   }
-  
+                }
     return errors;
-  }}
+  }
 
   const handleJoiErrors=(err)=>{
-    let errors={email:"", password:"", name:"", phone:""};
+    let errors={};
     Object.values(err.details).forEach(({path, message})=>{
-        errors[path]= message
+        errors[path] = message
     });
     return errors;
   }

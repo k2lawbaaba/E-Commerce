@@ -1,6 +1,5 @@
 const schemas =require('../Models/schemas')
-const Validation = require("../Validations/Joi_validation")
-const createToken = require('../Validations/jwt')
+const Validation = require("../Validations/Joi_validation");
 const {handleMongooseErrors, handleJoiErrors} = require('./handleErrors')
 
 
@@ -16,20 +15,19 @@ const signUp = async (req, res)=>{
                 try {
 
                     const userDetails = new schemas.user({
-                        name: value.name,
-                         phone: value.phone,
-                        email: value.email,
-                        password:value.password, 
+                        name: value.Name,
+                         phone: value.Phone,
+                        email: value.Email,
+                        password:value.Password, 
                         createdAt: new Date().toLocaleString()
                     });
-                  const newUser= await userDetails.save();
-                  const token= createToken(newUser._id);
-                  res.cookie("jwt", token, {httpOnly: true, secure: true, maxAge: 1000 * 60 * 60});
+                  await userDetails.save();
+                 
                     res.status(201).send(`User account created successfully`);
     
                 }
                 catch (error) {
-                
+                    console.log(error);
                     const errors=handleMongooseErrors(error)
                     res.status(400).json({errors})
                 }  

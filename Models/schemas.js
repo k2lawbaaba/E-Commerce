@@ -72,17 +72,20 @@ const productSchema = new mongoose.Schema({
   },
   CreatedAt:{
     type : Date,
+  },
+  UpdatedAt:{
+    type : Date,
   }
 
 });
 
 //mongoose hooks for middleware
 userSchema.pre('save', async function(){
-   this.password= await bcrypt.hash(this.password, 10)
+   this.password= bcrypt.hash(this.password, 10)
 
 })
 userSchema.post('save', async function(doc,res){
-    await console.log(`New User created with id ${doc._id}`);
+    console.log(`New User created with id ${doc._id}`);
 })
 
 module.exports.user= new mongoose.model("user", userSchema)
